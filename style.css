@@ -1,0 +1,15 @@
+
+#mittCanvas {
+    display: block;
+    margin: 0 auto;
+    width: 85%;
+    height: 60%;
+    background-image: url("bilder/lunarSky.jpg");
+    background-size: cover;
+}
+
+#spaceShip {
+    width: 200px;
+    z-index: 1;
+    background-color: red;
+}
