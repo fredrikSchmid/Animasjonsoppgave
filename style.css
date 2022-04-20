@@ -1,15 +1,61 @@
 
+html, body  {
+    width: 100%;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+}
+
+#nivå {
+    position: absolute;
+
+    top: 80px;
+    left: 202px;
+}
+
+
+#poeng {
+    position: absolute;
+
+    top: 105px;
+    left: 202px;
+}
+
+#tittel {
+    position: absolute;
+    top: 80px;
+    left: 580px;
+    font-size: x-large;
+}
+
+#vanskelighetsgrad {
+    
+    width: 70%;
+    text-align: end;
+    margin: 1em auto;
+
+    font-size: medium;
+    position: relative;
+}
+
+#vanskelighetsgrad > label {
+    font-size: small;
+}
+
+
+
 #mittCanvas {
     display: block;
     margin: 0 auto;
-    width: 85%;
-    height: 60%;
-    background-image: url("bilder/lunarSky.jpg");
-    background-size: cover;
+    width: 60%;
+    height: 75%;
+    border: 2px grey solid;
+
+     background-image: url("bilder/lunarSky.jpg");
+     background-size: cover;
 }
 
 #spaceShip {
-    width: 200px;
-    z-index: 1;
-    background-color: red;
+
+    display: none;
+
 }

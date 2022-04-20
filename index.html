@@ -9,23 +9,40 @@
 </head>
 <body>
 
+    <div id="topText">
 
-    <div id="vansklighet">
+    <div id="nivå">Nivå</div>
 
-        <p>Vansklighetsgrad:</p>
+    <div id="poeng">Poeng</div>
+
+    <div id="tittel">Shooting Stars</div>
+
+
+    <div id="vanskelighetsgrad">
+
+        Vanskelighetsgrad
         <br>
         <br>
-        <button></button>
+        <label for="lett">Lett</label>
+        <input type="radio" name="grad" id="lett" value="lett" checked>
+        <br>
+        <label for="middels">Middels</label>
+        <input type="radio" name="grad" id="middels" value="mid">
+        <br>
+        <label for="vanskelig">Vanskelig</label>
+        <input type="radio" name="grad" id="vanskelig" value="hard">
+
 
 
     </div>
+    </div>
 
-    <canvas id="mittCanvas">
+    <canvas id="mittCanvas" width="1366px" height="768px">
 
 
     </canvas>
 
-        <img id="spaceShip" src="bilder/spaceship.jpg" alt="Romskipet ditt!">
+          <img id="spaceShip" src="bilder/spaceship.svg" alt="Romskipet ditt!"> 
 
 
     <script src="app.js"></script>
