@@ -35,6 +35,7 @@ html, body  {
 
     font-size: medium;
     position: relative;
+    
 }
 
 #vanskelighetsgrad > label {
@@ -54,8 +55,10 @@ html, body  {
      background-size: cover;
 }
 
-#spaceShip {
+.skip {
 
     display: none;
 
 }
+
+

@@ -1,149 +1,209 @@
+
 var poengsum = 1;
 var nivå = 1;
 
 var poengEl = document.getElementById("poeng");
 var nivåEl = document.getElementById("nivå");
 
-// setInterval(function () {
-//   if (nivå < 11) {
-//     poengEl.innerHTML = "Poeng:" + poengsum;
+var x = 500;
+var vGrad = "lett";
+var lettEl = document.getElementById("lett");
+var midEl = document.getElementById("middels");
+var hardEl = document.getElementById("vanskelig")
 
+window.addEventListener("keydown", mottaTaster);
+window.addEventListener("keyup", mottaTaster);
+var knapper = [];
+var c = document.getElementById("mittCanvas");
+
+var ctx = c.getContext("2d");
+var animasjonID;
+
+
+
+function mottaTaster(e) {
+  if (e.type == "keydown") {
+    knapper[e.keyCode] = true;
+  } else {
+    knapper[e.keyCode] = false;
+  }
+}
+
+
+//Kjører poengteller funskjonen  som legger til 2 poeng hvert sek.
+ setInterval(
+ function poengteller() {
+
+     
+
+
+   if (nivå < 11) {
+     poengEl.innerHTML = "Poeng:" + poengsum;
     
-//     if (poengsum % 10 == 0) {
-//       nivåEl.innerHTML = "Nivå:" + nivå;
+     if (poengsum % 10 == 0) {
+       nivåEl.innerHTML = "Nivå:" + nivå;
 
-//       nivå++;
-//     }
-//     poengsum++;
-//   }
-//}, 100);
+       nivå++;
+     }
+
+     if (lettEl.checked == true) {
+     vGrad = lettEl.value;
+     lettEl.blur();
+     x = 1000;
+
+     } else if (midEl.checked == true) {
+     vGrad = midEl.value;
+     midEl.blur();
+     x = 500;
+     } else if (hardEl.checked == true) {
+     vGrad = hardEl.value;
+     hardEl.blur();
+     x = 250;
+     }
+     
+     poengsum++;
+   }
+}, x);
 
 
 
+// $('input:radio[name="grad"]').on("click", function () {
+//   $(this).blur();
+// });
 
 
 
+//Gjør canvasen responsiv til skjermer med høyere/lavere oppløsning
 
-
-
- window.onload = function() {
-     var c = document.getElementById("mittCanvas");
+window.onload = function() {
      c.width = window.innerWidth * window.devicePixelRatio * 0.6;
      c.height = window.innerHeight * window.devicePixelRatio * 0.75;
-     var ctx = c.getContext("2d");
-     var img = document.getElementById("spaceShip");
-
-     // Forsøk på å rotere romskipet
-    //  ctx.translate(
-    //     img.width * Math.cos(90 * (Math.PI / 180)) -
-    //       img.height * Math.sin(90 * (Math.PI / 180)),
-    //     img.height * Math.cos(90 * (Math.PI / 180)) +
-    //       img.width * Math.sin(90 * (Math.PI / 180))
-    //   );
-    //  ctx.rotate(90*(Math.PI) / 180);
-     
-     ctx.drawImage(img, 200, 200, 80, 80);
-
-    
-
-    
 
 }
 
 
 
 
- var knapper = [];
+class Spiller {
+  constructor(x, y, fart) {
+    this.x = x;
+    this.y = y;
+    this.fart = fart;
+  }
+
+  flytt() {
+       //Gir spilleren fart når piltastene trykkes inn
+    if (knapper[37]) {
+      spiller.x -= spiller.fart;
+    }
+    if (knapper[39]) {
+      spiller.x += spiller.fart;
+    }
+    if (knapper[38]) {
+      spiller.y -= spiller.fart;
+    }
+    if (knapper[40]) {
+      spiller.y += spiller.fart;
+    }
+
+    //Hindrer spilleren i å bevege seg ut av canvas
+    if (this.x - 10 < 0) {
+      spiller.x += this.fart;
+    }
+    if (this.x + 80 > c.width) {
+      spiller.x -= this.fart;
+    }
+    if (this.y  < 0) {
+      spiller.y += this.fart;
+    }
+    if (this.y + 80 > c.height) {
+      spiller.y -= this.fart;
+    }
+  }
+
+  tegn() {
+    var spaceShipImg = document.getElementById("spaceShip");
+    ctx.drawImage(spaceShipImg, spiller.x, spiller.y, 80, 80);
+  }
+}
+
+class Fiende {
+     constructor(x, y, fart) {
+         this.x = x;
+         this.y = y;
+         this.xFart = fart;
+         this.yFart = fart;
+     }
+
+     flytt() {
+         this.x += this.xFart;
 
 
- var animasjonID;
+           if (vGrad == "lett") {
+           this.y += this.yFart/4;
+
+           } else if (vGrad == "mid") {
+               this.y += this.yFart;
 
 
-// var audio = document.getElementById("lyd");
-// var audio2 = document.getElementById("romlyd");
+           } else {
+           this.y += this.yFart*3;
+           }
+
+         if (this.x - 5 < 0 || this.x + 80 > c.width) {
+           this.xFart = -this.xFart;
+         }
+
+         if (this.y + 60 > c.height || this.y - 5 < 0) {
+           this.yFart = -this.yFart;
+
+         }
+
+         
+     }
+
+     tegn() {
+          var alienImg = document.getElementById("alien");
+          ctx.drawImage(alienImg, fiende.x, fiende.y, 80, 55)
+     }
+}
+
+class Skudd {
+  constructor(x, y, fart, farge) {
+    this.x = x;
+    this.y = y;
+    this.yFart = fart;
+    this.xFart = fart;
+    this.farge = farge;
+  }
+
+  tegn() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 15, 0, Math.PI * 2);
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.fillStyle = this.farge;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  flytt() {
+       this.y -= this.yFart;
+  }
+}
 
 
-// class Sirkel {
-//     constructor(x, y, farge) {
-//         this.x = x;
-//         this.y = y;
-//         this.farge = farge;
-//     }
-    
-//     tegn() {
-//         ctx.beginPath();
-//         ctx.arc(this.x, this.y, 15, 0, Math.PI*2);
-//         ctx.strokeStyle = "#000000";
-//         ctx.lineWidth = 5;
-//         ctx.stroke();
-//         ctx.fillStyle = this.farge;
-//         ctx.fill();
-//         ctx.closePath();
-//     }
-// }
+var spiller = new Spiller(c.width/4, c.height/2.5, 7);
+var skudd = new Skudd(spiller.x, spiller.y + 100, 5, "red");
 
-// class Hinder extends Sirkel {
-//     constructor(x, y, farge, fart) {
-//         super(x, y, farge);
-//         this.xFart = fart;
-//         this.yFart = fart;
-//     }
-
-//     flytt() {
-//         this.x += this.xFart;
-//         this.y += this.yFart;
-
-//         if (this.x - 15 < 0 || this.x + 15 > canvas.width) {
-//           this.xFart = -this.xFart;
-//           poeng++;
-//           audio.play();
-//         }
-
-//         if (this.y + 15 > canvas.height || this.y - 15 < 0) {
-//           this.yFart = -this.yFart;
-//           poeng++;
-//           audio.play();
-
-//         }
-//     }
-// }
-
-// class Spiller extends Sirkel {
-//     constructor (x, y, farge, fart) {
-//         super(x, y, farge);
-//         this.fart = fart;
-//     }
-
-//     flytt() {
-//         if (knapper[37]) {spiller.x -= spiller.fart;}
-//         if (knapper[39]) {spiller.x += spiller.fart;}
-//         if (knapper[38]) {spiller.y -= spiller.fart;}
-//         if (knapper[40]) {spiller.y += spiller.fart;}
-
-//         if (this.x - 15 < 0 ) {spiller.x += this.fart;}
-//         if (this.x + 15 > canvas.width) {spiller.x -= this.fart};
-//         if (this.y - 15 < 0) {spiller.y += this.fart};
-//         if (this.y + 15 > canvas.height) {spiller.y -= this.fart};
-
-//     }   
-// }
-
-// var spiller = new Spiller(canvas.width/2, canvas.height -20, "orange", 7);
-// var hinder = new Hinder(canvas.width/2, canvas.height/2, "red", 5);
+var fiende = new Fiende(c.width/4, c.height/4, 2);
 // var hinder2 = new Hinder(canvas.width/5, canvas.height/4, "yellow", 5);
 
-// window.addEventListener("keydown", mottaTaster);
-// window.addEventListener("keyup", mottaTaster);
 
 
-// function mottaTaster(e) {
-//     if (e.type ==="keydown") {
-//         knapper[e.keyCode]  = true;
-//     } else {
-//         knapper[e.keyCode] = false;
-//     }
 
-// }
+
 
 
 // function finnAvstand(obj1, obj2) {
@@ -156,11 +216,11 @@ var nivåEl = document.getElementById("nivå");
 // }
 
 
- function animer() {
-     ctx.clearRect(0, 0, canvas.width, canvas.height);
+function animer() {
+     ctx.clearRect(0, 0, c.width, c.height);
 
-//     hinder.flytt();
-//     hinder.tegn();
+     fiende.flytt();
+     fiende.tegn();
 
 //     hinder2.flytt();
 //     hinder2.tegn();
@@ -168,6 +228,22 @@ var nivåEl = document.getElementById("nivå");
 
      spiller.flytt();
      spiller.tegn();
+
+
+
+     if(knapper[32]) {
+
+     skudd.flytt();
+     skudd.tegn();
+     }
+
+
+     if (1 == 1) {
+          animasjonID = requestAnimationFrame(animer);
+     }
+     else {
+          cancelAnimationFrame(animasjonID);
+     }
 
 //     if (finnAvstand(hinder, spiller) < 30) {
 
@@ -200,3 +276,4 @@ var nivåEl = document.getElementById("nivå");
  }
 
  animasjonID = requestAnimationFrame(animer);
+
