@@ -1,6 +1,8 @@
 var poengsum = 1;
 var nivå = 1;
 
+var ødelagtAlien = 0;
+
 
 var poengEl = document.getElementById("poeng");
 var nivåEl = document.getElementById("nivå");
@@ -16,9 +18,17 @@ window.addEventListener("keyup", mottaTaster);
 var knapper = [];
 var c = document.getElementById("mittCanvas");
 
+
+
+
 var ctx = c.getContext("2d");
 var animasjonID;
 
+var gameObjects = [];
+
+gameObjects.push(skudd);
+
+gameObjects.push(fiende);
 
 
 function mottaTaster(e) {
@@ -33,10 +43,6 @@ function mottaTaster(e) {
 //Kjører poengteller funskjonen  som legger til 2 poeng hvert sek.
  setInterval(
  function poengteller() {
-
-     
-
-
    if (nivå < 11) {
      poengEl.innerHTML = "Poeng:" + poengsum;
     
@@ -123,49 +129,54 @@ class Spiller {
 
   tegn() {
     var spaceShipImg = document.getElementById("spaceShip");
-    ctx.drawImage(spaceShipImg, spiller.x, spiller.y, 80, 80);
+    ctx.drawImage(spaceShipImg, this.x, this.y, 80, 80);
   }
 }
 
 class Fiende {
-     constructor(x, y, fart) {
-         this.x = x;
-         this.y = y;
-         this.xFart = fart;
-         this.yFart = fart;
-     }
+  constructor(x, y, fart) {
+    this.x = x;
+    this.y = y;
+    this.xFart = fart;
+    this.yFart = fart;
+    this.alienbilde = document.getElementById("alien");
+    this.expobilde = document.getElementById("explosion");
+    this.bilde = this.alienbilde;
+  }
 
-     flytt() {
-         this.x += this.xFart;
+  flytt() {
+    this.x += this.xFart;
 
+    if (vGrad == "lett") {
+      this.y += this.yFart / 4;
+    } else if (vGrad == "mid") {
+      this.y += this.yFart;
+    } else {
+      this.y += this.yFart * 3;
+    }
 
-           if (vGrad == "lett") {
-           this.y += this.yFart/4;
+    if (this.x - 5 < 0 || this.x + 80 > c.width) {
+      this.xFart = -this.xFart;
+    }
 
-           } else if (vGrad == "mid") {
-               this.y += this.yFart;
+    if (this.y + 60 > c.height || this.y - 5 < 0) {
+      this.yFart = -this.yFart;
+    }
+  }
 
+  tegn() {
+    ctx.drawImage(this.bilde, this.x, this.y, 80, 55);
+  }
 
-           } else {
-           this.y += this.yFart*3;
-           }
+  ødelagt() {
+    this.tidSkutt = Date.now();
+    this.bilde = this.expobilde;
+  }
 
-         if (this.x - 5 < 0 || this.x + 80 > c.width) {
-           this.xFart = -this.xFart;
-         }
-
-         if (this.y + 60 > c.height || this.y - 5 < 0) {
-           this.yFart = -this.yFart;
-
-         }
-
-         
-     }
-
-     tegn() {
-          var alienImg = document.getElementById("alien");
-          ctx.drawImage(alienImg, fiende.x, fiende.y, 80, 55)
-     }
+  skutt() {
+    this.yFart = 0;
+    this.xFart = 0;
+  }
 }
 
 class Skudd {
@@ -184,12 +195,15 @@ class Skudd {
   flytt() {
        this.y -= this.yFart;
   }
+
 }
 
 
 var spiller = new Spiller(c.width/4, c.height/2.5, 6);
 
-var fiende = new Fiende(c.width/4, c.height/4, 2);
+var fiende = [];
+fiende.push(new Fiende(c.width/4, c.height/4, 2));
+
 var skudd = [];
 
 var sisteSkudd = 0;
@@ -204,92 +218,102 @@ var z = 1;
 
 
 
- function finnAvstand(obj1, obj2) {
-     var xAvstand2 = Math.pow(obj1.x - obj2.x, 2);
-     var yAvstand2 = Math.pow(obj1.y -obj2.y, 2);
-
-     var avstand = Math.sqrt(xAvstand2 + yAvstand2);
-
-     return avstand;
- }
+ 
 
 
 function animer() {
-     ctx.clearRect(0, 0, c.width, c.height);
+  ctx.clearRect(0, 0, c.width, c.height);
 
-     fiende.flytt();
-     fiende.tegn();
+    for( var i = 0; i < fiende.length; i++) {
+    fiende[i].flytt();
+    fiende[i].tegn();
+    }
 
-//     hinder2.flytt();
-//     hinder2.tegn();
+
+  spiller.flytt();
+  spiller.tegn();
+
+  function finnAvstand(obj1, obj2) {
+
+    var xAvstand2 = Math.pow(obj1.x - obj2.x - 50, 2);
+    var yAvstand2 = Math.pow(obj1.y - obj2.y + 50, 2);
+
+    var avstand = Math.sqrt(xAvstand2 + yAvstand2);
+
+    return avstand;
+  }
+
+  if (knapper[32] && Date.now() - sisteSkudd > 500) {
+    if (z == 1) {
+      skudd.push(new Skudd(spiller.x + 14, spiller.y - 20, 7));
+      z = 2;
+    } else if (z == 2) {
+      skudd.push(new Skudd(spiller.x + 60, spiller.y - 20, 7));
+
+      z = 1;
+    }
+
+    sisteSkudd = Date.now();
+  }
+
+  for (i = 0; i < skudd.length; i++) {
+    skudd[i].flytt();
+    skudd[i].tegn();
+  }
 
 
-     spiller.flytt();
-     spiller.tegn();
+   for (var i = 0; i < skudd.length; i++) {
+     for (var j = 0; j < fiende.length; j++) {
+       if (finnAvstand(skudd[i], fiende[j]) < 50) {
+         skudd.splice(i, 1);
 
-console.log(finnAvstand(skudd, fiende))
+         fiende[j].ødelagt();
 
-     if(knapper[32] && Date.now() - sisteSkudd > 500) {
-     
+         ødelagtAlien = 1;
+       }
+     }
+   }
 
-      if(z == 1) {
-     skudd.push(new Skudd(spiller.x + 14, spiller.y - 20, 7));
-     console.log("test")
-      z=2;
+var nyTid = Date.now();
+
+  for(var i = 0; i < fiende.length; i++) {
+          if(ødelagtAlien == 1){
+
+            fiende[i].skutt();
+
+          if(nyTid - fiende[i].tidSkutt  > 1000) {
+
+            fiende.splice(i, 1);
+
+            ødelagtAlien = 0;
+
+
+            fiende.push(new Fiende(Math.floor(Math.random()*c.width-50), c.height / 4, 2));
+
       }
-      else if(z == 2) {
-     skudd.push(new Skudd(spiller.x + 60, spiller.y - 20, 7));
-     console.log("test2")
+    }
+  }
 
-        z=1;
-      }
-      
-      sisteSkudd = Date.now();
+  if (1 == 1) {
+    animasjonID = requestAnimationFrame(animer);
+  } else {
+    cancelAnimationFrame(animasjonID);
+  }
 
+  //     else if (finnAvstand(hinder2, spiller) < 30) {
+  //       ctx.font = "30px Georgia";
+  //       ctx.fillText("Du tapte!", 90, 75);
 
+  //       ctx.font = "15px Georgia";
+  //       ctx.fillText(poeng, 20, 20);
+  //               audio2.play();
 
-     }
-
-
-     for (i = 0; i < skudd.length; i++) {
-       skudd[i].flytt();
-       skudd[i].tegn();
-
-       console.log("akyt")
-     }
-
-     console.log(skudd)
-     
-if (finnAvstand(skudd, fiende) < 100) {
-  var expoImg = document.getElementById("explosion");
-  ctx.drawImage(expoImg, this.x, this.y, 80, 80);
-
-  cancelAnimationFrame(animasjonID);
-}  
-
-     if (1 == 1) {
-          animasjonID = requestAnimationFrame(animer);
-     }
-     else {
-          cancelAnimationFrame(animasjonID);
-     }
-
-     
-//     else if (finnAvstand(hinder2, spiller) < 30) {
-//       ctx.font = "30px Georgia";
-//       ctx.fillText("Du tapte!", 90, 75);
-
-//       ctx.font = "15px Georgia";
-//       ctx.fillText(poeng, 20, 20);
-//               audio2.play();
-
-
-//       cancelAnimationFrame(animasjonID);
-//     } else {
-//       ctx.font = "15px Georgia";
-//       ctx.fillText(poeng, 20, 20);
-//       animasjonID = requestAnimationFrame(animer);
-//     }
- }
+  //       cancelAnimationFrame(animasjonID);
+  //     } else {
+  //       ctx.font = "15px Georgia";
+  //       ctx.fillText(poeng, 20, 20);
+  //       animasjonID = requestAnimationFrame(animer);
+  //     }
+}
 
 animasjonID = requestAnimationFrame(animer);
