@@ -17,18 +17,19 @@ window.addEventListener("keydown", mottaTaster);
 window.addEventListener("keyup", mottaTaster);
 var knapper = [];
 var c = document.getElementById("mittCanvas");
-
-
-
-
 var ctx = c.getContext("2d");
 var animasjonID;
 
-var gameObjects = [];
+var restartEl = document.getElementById("restart")
 
-gameObjects.push(skudd);
+restartEl.addEventListener("click", restart);
 
-gameObjects.push(fiende);
+function restart() {
+  
+
+  window.location.reload();
+
+}
 
 
 function mottaTaster(e) {
@@ -288,27 +289,31 @@ var nyTid = Date.now();
             ødelagtAlien = 0;
 
 
-            fiende.push(new Fiende(Math.floor(Math.random()*c.width-50), c.height / 4, 2));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height + 20, 2));
 
       }
     }
   }
 
-  if (1 == 1) {
-    animasjonID = requestAnimationFrame(animer);
-  } else {
-    cancelAnimationFrame(animasjonID);
+  for(var i = 0; i < fiende.length; i++) {
+
+
+    if (finnAvstand(fiende[i], spiller) < 50) {
+            ctx.font = "30px Georgia";
+            ctx.fillstyle = "yellow";
+            ctx.fillText("Du tapte!", 200, 200);
+            console.log("Test")
+
+
+            cancelAnimationFrame(animasjonID);    } 
+            else {
+  animasjonID = requestAnimationFrame(animer);    }
+
   }
+  
 
   //     else if (finnAvstand(hinder2, spiller) < 30) {
-  //       ctx.font = "30px Georgia";
-  //       ctx.fillText("Du tapte!", 90, 75);
-
-  //       ctx.font = "15px Georgia";
-  //       ctx.fillText(poeng, 20, 20);
-  //               audio2.play();
-
-  //       cancelAnimationFrame(animasjonID);
+  //      
   //     } else {
   //       ctx.font = "15px Georgia";
   //       ctx.fillText(poeng, 20, 20);

@@ -51,14 +51,33 @@ html, body  {
     height: 75%;
     border: 2px grey solid;
 
-     background-image: url("bilder/lunarSky.jpg");
-     background-size: cover;
+    
 }
 
-.skip {
+
+
+
+#tapte {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 10em;
+    padding: 2fr;
+    background-color: red;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    border: 2px solid grey;
+    border-radius: 10px;
+}
+
+#tapte > button {
+    background-color: lightred;
+}
+
+.usynlig {
 
     display: none;
 
 }
-
-
