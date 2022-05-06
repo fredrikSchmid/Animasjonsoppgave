@@ -74,12 +74,6 @@ function mottaTaster(e) {
 
 
 
-// $('input:radio[name="grad"]').on("click", function () {
-//   $(this).blur();
-// });
-
-
-
 //Gjør canvasen responsiv til skjermer med høyere/lavere oppløsning
 
 window.onload = function() {
@@ -150,13 +144,23 @@ class Fiende {
 
     if (vGrad == "lett") {
       this.y += this.yFart / 4;
+      this.x += this.xFart / 4;
+
+      console.log("Lett")
     } else if (vGrad == "mid") {
       this.y += this.yFart;
+      this.x += this.xFart;
+      console.log("Mid")
     } else {
       this.y += this.yFart * 3;
+      this.x += this.xFart;
+
+
+      console.log("Hard")
+
     }
 
-    if (this.x - 5 < 0 || this.x + 80 > c.width) {
+    if (this.x - 10 < 0 || this.x + 90 > c.width) {
       this.xFart = -this.xFart;
     }
 
@@ -203,7 +207,9 @@ class Skudd {
 var spiller = new Spiller(c.width/4, c.height/2.5, 6);
 
 var fiende = [];
-fiende.push(new Fiende(c.width/4, c.height/4, 2));
+
+
+fiende.push(new Fiende(c.width/4, c.height/4, Math.random()*3+2));
 
 var skudd = [];
 
@@ -215,7 +221,15 @@ var z = 1;
 
 
 
+function finnAvstand(obj1, obj2) {
 
+  var xAvstand2 = Math.pow(obj1.x - obj2.x, 2);
+  var yAvstand2 = Math.pow(obj1.y - obj2.y, 2);
+
+  var avstand = Math.sqrt(xAvstand2 + yAvstand2);
+
+  return avstand;
+}
 
 
 
@@ -228,21 +242,15 @@ function animer() {
     for( var i = 0; i < fiende.length; i++) {
     fiende[i].flytt();
     fiende[i].tegn();
+
+    console.log("for løkke 1")
     }
 
 
   spiller.flytt();
   spiller.tegn();
 
-  function finnAvstand(obj1, obj2) {
-
-    var xAvstand2 = Math.pow(obj1.x - obj2.x - 50, 2);
-    var yAvstand2 = Math.pow(obj1.y - obj2.y + 50, 2);
-
-    var avstand = Math.sqrt(xAvstand2 + yAvstand2);
-
-    return avstand;
-  }
+  
 
   if (knapper[32] && Date.now() - sisteSkudd > 500) {
     if (z == 1) {
@@ -260,6 +268,7 @@ function animer() {
   for (i = 0; i < skudd.length; i++) {
     skudd[i].flytt();
     skudd[i].tegn();
+    console.log("for løkke 2")
   }
 
 
@@ -271,6 +280,7 @@ function animer() {
          fiende[j].ødelagt();
 
          ødelagtAlien = 1;
+         console.log("for løkke 3 og 4")
        }
      }
    }
@@ -282,43 +292,38 @@ var nyTid = Date.now();
 
             fiende[i].skutt();
 
-          if(nyTid - fiende[i].tidSkutt  > 1000) {
+            if(nyTid - fiende[i].tidSkutt  > 1000) {
 
-            fiende.splice(i, 1);
+              fiende.splice(i, 1);
 
-            ødelagtAlien = 0;
+              ødelagtAlien = 0;
+
+              fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
 
 
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height + 20, 2));
 
       }
     }
+    console.log("for løkke 5")
   }
 
   for(var i = 0; i < fiende.length; i++) {
-
-
     if (finnAvstand(fiende[i], spiller) < 50) {
-            ctx.font = "30px Georgia";
-            ctx.fillstyle = "yellow";
-            ctx.fillText("Du tapte!", 200, 200);
-            console.log("Test")
+      ctx.font = "30px Comic Sans MS";
+      ctx.fillStyle = "yellow";
+      ctx.textAlign = "center";
+      ctx.fillText("Du tapte!", c.width/2, c.height/2);
 
 
             cancelAnimationFrame(animasjonID);    } 
             else {
   animasjonID = requestAnimationFrame(animer);    }
+  console.log("for løkke 6")
 
   }
   
 
-  //     else if (finnAvstand(hinder2, spiller) < 30) {
-  //      
-  //     } else {
-  //       ctx.font = "15px Georgia";
-  //       ctx.fillText(poeng, 20, 20);
-  //       animasjonID = requestAnimationFrame(animer);
-  //     }
+  console.log(fiende[0].xFart);
 }
 
 animasjonID = requestAnimationFrame(animer);
