@@ -2,33 +2,27 @@ var poengsum = 1;
 var nivå = 1;
 
 var ødelagtAlien = 0;
-
-
 var poengEl = document.getElementById("poeng");
 var nivåEl = document.getElementById("nivå");
-
 var x = 500;
 var vGrad = "lett";
 var lettEl = document.getElementById("lett");
 var midEl = document.getElementById("middels");
-var hardEl = document.getElementById("vanskelig")
-
-window.addEventListener("keydown", mottaTaster);
-window.addEventListener("keyup", mottaTaster);
+var hardEl = document.getElementById("vanskelig");
 var knapper = [];
 var c = document.getElementById("mittCanvas");
 var ctx = c.getContext("2d");
 var animasjonID;
+var restartEl = document.getElementById("restart");
+var gameOver = false;
 
-var restartEl = document.getElementById("restart")
+restartEl.addEventListener("click", restartButton);
+window.addEventListener("keydown", mottaTaster);
+window.addEventListener("keyup", mottaTaster);
 
-restartEl.addEventListener("click", restart);
-
-function restart() {
-  
-
+function restartButton() {
   window.location.reload();
-
+  restartEl.blur();
 }
 
 
@@ -38,13 +32,20 @@ function mottaTaster(e) {
   } else {
     knapper[e.keyCode] = false;
   }
+  
+  if(knapper[82]) {
+    restartButton();
+  }
+  
 }
+
+
 
 
 //Kjører poengteller funskjonen  som legger til 2 poeng hvert sek.
  setInterval(
  function poengteller() {
-   if (nivå < 11) {
+   if (nivå < 11 && gameOver == false) {
      poengEl.innerHTML = "Poeng:" + poengsum;
     
      if (poengsum % 10 == 0) {
@@ -146,17 +147,14 @@ class Fiende {
       this.y += this.yFart / 4;
       this.x += this.xFart / 4;
 
-      console.log("Lett")
     } else if (vGrad == "mid") {
       this.y += this.yFart;
       this.x += this.xFart;
-      console.log("Mid")
     } else {
       this.y += this.yFart * 3;
       this.x += this.xFart;
 
 
-      console.log("Hard")
 
     }
 
@@ -204,7 +202,7 @@ class Skudd {
 }
 
 
-var spiller = new Spiller(c.width/4, c.height/2.5, 6);
+var spiller = new Spiller(c.width/2.5, c.height/1.69, 6);
 
 var fiende = [];
 
@@ -243,7 +241,6 @@ function animer() {
     fiende[i].flytt();
     fiende[i].tegn();
 
-    console.log("for løkke 1")
     }
 
 
@@ -268,19 +265,25 @@ function animer() {
   for (i = 0; i < skudd.length; i++) {
     skudd[i].flytt();
     skudd[i].tegn();
-    console.log("for løkke 2")
   }
 
 
    for (var i = 0; i < skudd.length; i++) {
+    if (skudd[i].y < 0) {
+      skudd.splice(i, 1);
+
+      break
+    }
      for (var j = 0; j < fiende.length; j++) {
        if (finnAvstand(skudd[i], fiende[j]) < 50) {
          skudd.splice(i, 1);
 
          fiende[j].ødelagt();
+         fiende[j].skutt();
 
          ødelagtAlien = 1;
-         console.log("for løkke 3 og 4")
+
+         break
        }
      }
    }
@@ -290,7 +293,7 @@ var nyTid = Date.now();
   for(var i = 0; i < fiende.length; i++) {
           if(ødelagtAlien == 1){
 
-            fiende[i].skutt();
+            
 
             if(nyTid - fiende[i].tidSkutt  > 1000) {
 
@@ -298,32 +301,50 @@ var nyTid = Date.now();
 
               ødelagtAlien = 0;
 
+              if(vGrad == "lett") {
               fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+              } else if (vGrad == "mid") {
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+              } else {
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+              }
+              
+
 
 
 
       }
     }
-    console.log("for løkke 5")
   }
 
   for(var i = 0; i < fiende.length; i++) {
     if (finnAvstand(fiende[i], spiller) < 50) {
-      ctx.font = "30px Comic Sans MS";
+      ctx.font = "30px Courier New";
       ctx.fillStyle = "yellow";
       ctx.textAlign = "center";
       ctx.fillText("Du tapte!", c.width/2, c.height/2);
+      ctx.font = "20px Courier New";
+      ctx.fillText("Du fikk " + (poengsum-1) + " poeng!", c.width/2, c.height/1.7)
+      gameOver = true;
 
+      }
+         
+  }
 
-            cancelAnimationFrame(animasjonID);    } 
-            else {
-  animasjonID = requestAnimationFrame(animer);    }
-  console.log("for løkke 6")
+  if (gameOver == false) {
+  animasjonID = requestAnimationFrame(animer); 
+  } else if (gameOver == true){
+    cancelAnimationFrame(animasjonID);
 
   }
+
   
 
-  console.log(fiende[0].xFart);
 }
 
 animasjonID = requestAnimationFrame(animer);
+
+
