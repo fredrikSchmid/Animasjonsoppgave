@@ -45,7 +45,7 @@ function mottaTaster(e) {
 //Kjører poengteller funskjonen  som legger til 2 poeng hvert sek.
  setInterval(
  function poengteller() {
-   if (nivå < 11 && gameOver == false) {
+   if (nivå < 101 && gameOver == false) {
      poengEl.innerHTML = "Poeng:" + poengsum;
     
      if (poengsum % 10 == 0) {
@@ -283,6 +283,14 @@ function animer() {
 
          ødelagtAlien = 1;
 
+         if (vGrad == "lett") {
+          poengsum = poengsum + 2;
+        } else if (vGrad == "mid") {
+          poengsum = poengsum + 5;
+        } else if (vGrad == "hard") {
+          poengsum = poengsum + 10;
+        }
+ 
          break
        }
      }
@@ -304,7 +312,7 @@ var nyTid = Date.now();
               if(vGrad == "lett") {
               fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
               } else if (vGrad == "mid") {
-                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
+                fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 200, 2));
                 fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
               } else {
                 fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*c.height - 20, 2));
@@ -327,7 +335,9 @@ var nyTid = Date.now();
       ctx.textAlign = "center";
       ctx.fillText("Du tapte!", c.width/2, c.height/2);
       ctx.font = "20px Courier New";
-      ctx.fillText("Du fikk " + (poengsum-1) + " poeng!", c.width/2, c.height/1.7)
+      ctx.fillText("Du fikk " + (poengsum-1) + " poeng!", c.width/2, c.height/1.7);
+      ctx.font = "17px Courier New"
+      ctx.fillText("Trykk på 'R' eller Restart-knappen for å starte på nytt", c.width/2, c.height/1.4)
       gameOver = true;
 
       }
