@@ -5,28 +5,38 @@ html, body  {
     margin: 0;
 }
 
+
+/* Stylingen til selve canvaset */
+#mittCanvas {
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    height: 75%;
+    border: 2px grey solid;
+    background-image: url(bilder/lunarSky.jpg);
+    background-size: cover;
+    
+}
+
+/* Stylingen til alt inni topText div-en */
 #nivå {
     position: absolute;
 
     top: 80px;
     left: 202px;
 }
-
-
 #poeng {
     position: absolute;
 
     top: 105px;
     left: 202px;
 }
-
 #tittel {
     position: absolute;
     top: 80px;
     left: 45%;
     font-size: x-large;
 }
-
 #vanskelighetsgrad {
     
     width: 70%;
@@ -44,20 +54,8 @@ html, body  {
 
 
 
-#mittCanvas {
-    display: block;
-    margin: 0 auto;
-    width: 60%;
-    height: 75%;
-    border: 2px grey solid;
-    background-image: url(bilder/lunarSky.jpg);
-    background-size: cover;
-    
-}
 
-
-
-
+/* Styling til div-en der knappen som restarter spillet er */
 #tapte {
     display: flex;
     flex-wrap: wrap;
@@ -72,13 +70,14 @@ html, body  {
     border: 2px solid grey;
     border-radius: 10px;
 }
-
+/* Selve knappen */
 #tapte > button {
     background-color: #005ef8;
     color: white;
     border-radius: 10px;
 }
 
+/* Den som gjør alle bildene usynlig */
 .usynlig {
 
     display: none;

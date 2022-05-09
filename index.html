@@ -9,6 +9,7 @@
 </head>
 <body>
 
+    <!-- Toppteksten inneholder alt av tekst over canvaset, inkludert vanskelighetsgradene -->
     <div id="topText">
 
     <div id="nivå">Nivå: 0</div>
@@ -24,10 +25,10 @@
         <br>
         <br>
         <label for="lett">Lett</label>
-        <input type="radio" name="grad" id="lett" value="lett" checked>
+        <input type="radio" name="grad" id="lett" value="lett">
         <br>
         <label for="middels">Middels</label>
-        <input type="radio" name="grad" id="middels" value="mid">
+        <input type="radio" name="grad" id="middels" value="mid" checked>
         <br>
         <label for="vanskelig">Vanskelig</label>
         <input type="radio" name="grad" id="vanskelig" value="hard">
@@ -37,6 +38,8 @@
     </div>
     </div>
 
+
+    <!-- Selve canvaset, har satt width og height inni den siden oppløsningen på det inni ble dårlig uten å gjøre det -->
     <canvas id="mittCanvas" width="1366px" height="768px">
 
     
@@ -52,7 +55,7 @@
 
         </div>
 
-
+        <!-- Alle bildene jeg bruker legges inn i selve html-koden og gjøres usynlig med CSS -->
         <img id="spaceShip"   class="usynlig" src="bilder/spaceship.svg" alt="Romskipet ditt!"   > 
         <img id="alien"       class="usynlig" src="bilder/alien.svg"     alt="Romvesenes skip!"  >
         <img id="laser"       class="usynlig" src="bilder/laser.png"     alt="Laseren din!"      >
