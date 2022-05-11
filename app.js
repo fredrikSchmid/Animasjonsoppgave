@@ -1,27 +1,30 @@
 
 // Forskjellige variabler som blir brukt i spillet
+var animasjonID;
 var poengsum = 1;
 var nivå = 1;
 var ødelagtAlien = 0;
+var x = 500;
+var sisteSkudd = 0;
+var z = 1;
+var vGrad = "lett";
+var skudd = [];
+var fiende = [];
+var knapper = [];
 var poengEl = document.getElementById("poeng");
 var nivåEl = document.getElementById("nivå");
-var x = 500;
-var vGrad = "lett";
 var lettEl = document.getElementById("lett");
 var midEl = document.getElementById("middels");
 var hardEl = document.getElementById("vanskelig");
-var knapper = [];
 var c = document.getElementById("mittCanvas");
 var ctx = c.getContext("2d");
-var animasjonID;
 var restartEl = document.getElementById("restart");
-var gameOver = false;
 var spaceShipImg = document.getElementById("spaceShip");
 var laserbeamImg = document.getElementById("laser");
-var skudd = [];
-var fiende = [];
-var sisteSkudd = 0;
-var z = 1;
+var gameOver = false;
+
+
+
 
 
 //Eventlisteners som sjekker om og hvilke taster som blir trykket på og Restart-knappen
@@ -179,7 +182,7 @@ class Fiende {
   }
 }
 
-//Klasseb til skuddet
+//Klassen til skuddet
 class Skudd {
   constructor(x, y, fart) {
     this.x = x;
@@ -204,7 +207,7 @@ class Skudd {
 var spiller = new Spiller(c.width/2.5, c.height/1.69, 6);
 
 //Lager en ny fiende med klassen og dytter den inn i arrayen
-fiende.push(new Fiende(c.width/4, c.height/4, Math.random()*3+2));
+fiende.push(new Fiende(c.width/4, c.height/4, -Math.random()*3-2));
 
 //Funksjon som finner avstanden mellom to ting
 function finnAvstand(obj1, obj2) {
@@ -288,17 +291,17 @@ function animer() {
     if(ødelagtAlien == 1){
       if(nyTid - fiende[i].tidSkutt  > 1000) {
         fiende.splice(i, 1);
-        ødelagtAlien = 0;
+        // ødelagtAlien = 0;
 
         if(vGrad == "lett") {
-          fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), 2));
+          fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
         } else if (vGrad == "mid") {
-            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), 2));
-            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), 2));
+            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
+            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
         } else {
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), 2));
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), 2));
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), 2));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
         }
       }
     }
@@ -327,7 +330,7 @@ function animer() {
   }
 }
 
-//Kjører animasjonen en gang for å sette den i gang
+//Kjører animasjonen en gang først for å sette den i gang
 animasjonID = requestAnimationFrame(animer);
 
 
