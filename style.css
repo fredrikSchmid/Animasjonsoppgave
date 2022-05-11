@@ -19,12 +19,6 @@ html, body  {
 }
 
 /* Stylingen til alt inni topText div-en */
-#nivå {
-    position: absolute;
-
-    top: 80px;
-    left: 202px;
-}
 #poeng {
     position: absolute;
 

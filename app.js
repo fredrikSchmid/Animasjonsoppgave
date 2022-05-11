@@ -3,7 +3,6 @@
 var animasjonID;
 var poengsum = 1;
 var nivå = 1;
-var ødelagtAlien = 0;
 var x = 500;
 var sisteSkudd = 0;
 var z = 1;
@@ -267,11 +266,9 @@ function animer() {
         fiende[j].ødelagt();
         fiende[j].skutt();
 
-        ødelagtAlien = 1;
-
         //Gir ekstra poeng når du treffer utifra vGrad
         if (vGrad == "lett") {
-          poengsum = poengsum + 2;
+          poengsum = poengsum + 1;
         } else if (vGrad == "mid") {
             poengsum = poengsum + 5;
         } else if (vGrad == "hard") {
@@ -288,23 +285,21 @@ function animer() {
   //Går gjennom alle fiendene i arrayen og sjekker om de er ødelagt, lar de være ødelagt i 1000ms før de fjernes og det
   //legges til nye fiender. Antall nye fiender utifra vGrad.
   for(var i = 0; i < fiende.length; i++) {
-    if(ødelagtAlien == 1){
+    
       if(nyTid - fiende[i].tidSkutt  > 1000) {
         fiende.splice(i, 1);
-        // ødelagtAlien = 0;
 
         if(vGrad == "lett") {
-          fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
+          fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -Math.random()*2-1));
         } else if (vGrad == "mid") {
-            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
-            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -2));
+            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -Math.random()*2-1));
+            fiende.push(new Fiende(Math.random()*(c.width/1.2), Math.random()*(c.height/2), -Math.random()*2-1));
         } else {
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
-            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -2));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -Math.random()*2-1));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -Math.random()*2-1));
+            fiende.push(new Fiende(Math.random()*c.width-50, Math.random()*(c.height/2), -Math.random()*2-1));
         }
       }
-    }
   }
 
   //Sjekker om spiller og en fiende er på hverandre, skriver på canvaset og setter gameOver = true
